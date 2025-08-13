@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ResumeOptimizer - Perfect Resumes Made Simple</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.4.2/mammoth.browser.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>ResumeOptimizer</h1>
+            <p>Create perfect, tailored resumes in minutes</p>
+        </header>
+
+        <div class="main-content">
+            <!-- Step 1: Upload Resume -->
+            <section class="step" id="step1">
+                <h2>Step 1: Upload Your Resume</h2>
+                <div class="upload-area" id="uploadArea">
+                    <div class="upload-icon">📄</div>
+                    <p>Drag & drop your resume here or click to browse</p>
+                    <input type="file" id="fileInput" accept=".pdf,.doc,.docx,.txt" hidden>
+                    <button onclick="document.getElementById('fileInput').click()">Choose File</button>
+                </div>
+                <div class="manual-entry">
+                    <h3>Or enter manually:</h3>
+                    <button onclick="showManualEntry()">Manual Entry</button>
+                </div>
+            </section>
+
+            <!-- Step 2: Select Industry -->
+            <section class="step" id="step2" style="display:none;">
+                <h2>Step 2: Select Your Target Industry</h2>
+                <div class="industry-grid">
+                    <div class="industry-card" onclick="selectIndustry('sales')">
+                        <h3>Sales & Retail</h3>
+                        <p>Emphasizes targets, customer relationships, revenue generation</p>
+                    </div>
+                    <div class="industry-card" onclick="selectIndustry('tech')">
+                        <h3>Technology & Technical Support</h3>
+                        <p>Highlights technical skills, troubleshooting, system knowledge</p>
+                    </div>
+                    <div class="industry-card" onclick="selectIndustry('education')">
+                        <h3>Education & Training</h3>
+                        <p>Focuses on mentoring, curriculum, student outcomes</p>
+                    </div>
+                    <div class="industry-card" onclick="selectIndustry('healthcare')">
+                        <h3>Healthcare</h3>
+                        <p>Emphasizes patient care, certifications, compliance</p>
+                    </div>
+                    <div class="industry-card" onclick="selectIndustry('finance')">
+                        <h3>Finance & Business</h3>
+                        <p>Highlights analytical skills, compliance, client management</p>
+                    </div>
+                    <div class="industry-card" onclick="selectIndustry('creative')">
+                        <h3>Creative & Design</h3>
+                        <p>Showcases portfolio, creativity, project management</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Step 3: Choose Style -->
+            <section class="step" id="step3" style="display:none;">
+                <h2>Step 3: Choose Your Style</h2>
+                <div class="style-options">
+                    <div class="style-card" onclick="selectStyle('professional')">
+                        <div class="style-preview professional-preview"></div>
+                        <h3>Clean & Professional</h3>
+                        <p>Classic, ATS-friendly format</p>
+                    </div>
+                    <div class="style-card" onclick="selectStyle('modern')">
+                        <div class="style-preview modern-preview"></div>
+                        <h3>Modern & Minimal</h3>
+                        <p>Clean lines, maximum white space</p>
+                    </div>
+                    <div class="style-card" onclick="selectStyle('creative')">
+                        <div class="style-preview creative-preview"></div>
+                        <h3>Creative</h3>
+                        <p>Subtle design elements, visual appeal</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Step 4: Manual Entry Form -->
+            <section class="step" id="manualEntry" style="display:none;">
+                <h2>Enter Your Information</h2>
+                <form id="resumeForm">
+                    <div class="form-section">
+                        <h3>Personal Information</h3>
+                        <input type="text" id="fullName" placeholder="Full Name" required>
+                        <input type="text" id="location" placeholder="City, Province">
+                        <input type="tel" id="phone" placeholder="Phone Number">
+                        <input type="email" id="email" placeholder="Email Address">
+                    </div>
+
+                    <div class="form-section">
+                        <h3>Professional Summary</h3>
+                        <textarea id="summary" placeholder="Brief professional summary (2-3 sentences)" rows="3"></textarea>
+                    </div>
+
+                    <div class="form-section">
+                        <h3>Skills</h3>
+                        <textarea id="skills" placeholder="List your key skills, separated by commas" rows="3"></textarea>
+                    </div>
+
+                    <div class="form-section">
+                        <h3>Work Experience</h3>
+                        <div id="experienceContainer">
+                            <div class="experience-entry">
+                                <input type="text" placeholder="Job Title">
+                                <input type="text" placeholder="Company Name">
+                                <input type="text" placeholder="Location">
+                                <input type="text" placeholder="Start Date - End Date">
+                                <textarea placeholder="Job responsibilities and achievements" rows="4"></textarea>
+                            </div>
+                        </div>
+                        <button type="button" onclick="addExperience()">+ Add Another Position</button>
+                    </div>
+
+                    <div class="form-section">
+                        <h3>Education</h3>
+                        <div id="educationContainer">
+                            <div class="education-entry">
+                                <input type="text" placeholder="Degree/Certificate">
+                                <input type="text" placeholder="Institution">
+                                <input type="text" placeholder="Location">
+                                <input type="text" placeholder="Graduation Year">
+                            </div>
+                        </div>
+                        <button type="button" onclick="addEducation()">+ Add Another Education</button>
+                    </div>
+                </form>
+                <button onclick="processManualEntry()">Generate Resume</button>
+            </section>
+
+            <!-- Step 5: Preview & Generate -->
+            <section class="step" id="step4" style="display:none;">
+                <h2>Step 4: Preview & Download</h2>
+                <div class="preview-container">
+                    <div class="resume-preview" id="resumePreview">
+                        <!-- Generated resume will appear here -->
+                    </div>
+                    <div class="download-options">
+                        <button onclick="downloadPDF()" class="download-btn">Download PDF</button>
+                        <button onclick="goBack()" class="back-btn">Make Changes</button>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
